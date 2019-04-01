@@ -4,5 +4,10 @@ var socket = io();
 
 socket.on('connection', (socket) => {
   console.log("Socket connected");
-  socket.emit("hej alla sockets");
+  socket.emit("msg", "hej alla sockets");
+
+});
+
+socket.on('alertPost', (res) => {
+  console.log(res);
 });

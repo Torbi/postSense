@@ -22,7 +22,7 @@ module.exports = class DatabaseHandler {
       if(err) {
         console.log(err.stack);
       } else {
-        console.log("db connection succesfull")
+        console.log("db connection succesfull");
       }
     });
   }
@@ -31,11 +31,7 @@ module.exports = class DatabaseHandler {
 
     console.log("newpost körs");
 
-    var query = {
-      name: 'insertPost',
-      text: "INSERT INTO postnotice(post) VALUES ($1)",
-      values: ["Du har fått post"],
-    }
+   var query = "INSERT INTO postnotice(post) VALUES('post')";
 
     this.conn.query(query, (err) =>  {
       if(err) {
@@ -48,15 +44,23 @@ module.exports = class DatabaseHandler {
 
   getPost()  {
 
-    var query = {
-      name: 'getPost',
-      text: "SELECT * FROM postnotice",
-    }
+    var query = "SELECT timestamp_pk FROM postnotice";
+    var times = []
+
     this.conn.query(query, (err, res) =>  {
       if(err) {
         console.log(err.stack);
       } else {
-        console.log(res)
+
+        console.log("timestamp extracted successfully");
+        console.log(res);
+        for(var i = 1; i < res.length; i++)  {
+
+          times.push(res.rows[i]);
+
+        }
+        console.log(times);
+        return times;
       }
     });
   }

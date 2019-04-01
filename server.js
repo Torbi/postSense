@@ -5,7 +5,7 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const DatabaseHandler = require('./dbconn.js');
 
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8080;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -22,46 +22,28 @@ app.post('/', (req, res) => {
   }
   console.log('POST /');
   console.dir(req.body);
-  res.writeHead(200, {'Content-Type': 'text/html'})
-  res.end('thanks')
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  res.end('thanks');
   dbconn.newPost();
 })
 
-io.on('connection', socket => {
+io.on('connection', (socket) => {
   console.log("User connected");
-  //dbconn.newPost();
+  socket.emit('alertPost', dbConn.getPost());
   socket.on('disconnect', () => {
     console.log("User disconnected");
   })
 
-  socket.on('newPost', () =>  {
-    console.log("du har fått post");
-    //dbConn.newPost();
-    //dbConn.getPost();
+  socket.on('msg', (txt) => {
+      console.log(txt);
+  })
+
+  socket.on('newPost', (txt) =>  {
+    console.log("newpost");
+    console.log(txt);
+    dbConn.newPost();
   })
 })
 
 
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
-/*
-app.post('/insertPost', function(req, res) {
-  console.log("req body: " + req.body);
-  if(req.method() == 'POST'){
-    console.log("halleluja de post");
-    insertPost(req.body);
-  }
-});
-
-app.get('/', (req, res) => {
-  res.send("hello mr world");
-});
-io.on('connection', onConnection);
-
-function onConnection(socket) {
-  console.log("Socket connected");
-  //console.log(io.sockets.sockets);
-}
-
-function post(msg){
-  socket.emit("post", msg);
-}*/
